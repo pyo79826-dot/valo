@@ -101,9 +101,8 @@
           </article>
         </div>
 
-        <div class="match-meta-grid">
+        <div class="match-meta-grid three-meta">
           <article class="card compact"><label>マップ</label><select id="mapSelect"><option>Ascent</option><option>Bind</option><option>Haven</option><option>Lotus</option><option>Split</option><option>Sunset</option><option>Icebox</option><option>Breeze</option><option>Corrode</option></select></article>
-          <article class="card compact"><label>自分のランク</label><select id="rankSelect"></select></article>
           <article class="card compact"><label>開始サイド</label><select id="sideSelect"><option>攻め</option><option>守り</option></select></article>
           <article class="card compact"><label>結果</label><select id="resultSelect"><option value="">未確定</option><option value="WIN">WIN</option><option value="LOSS">LOSS</option><option value="DRAW">DRAW</option></select></article>
         </div>
@@ -133,16 +132,16 @@
       <section id="stats" class="tab-panel">
         <div class="section-title-row stats-title-row">
           <div><span class="tag">ANALYTICS</span><h2>統計</h2></div>
-          <div class="rank-filter-wrap"><label for="rankFilter">ランクで絞り込み</label><select id="rankFilter"></select></div>
+          <div class="match-filter-wrap"><label for="matchFilter">試合を選択</label><select id="matchFilter"><option value="all">全試合</option></select></div>
         </div>
         <div class="stat-grid">
-          <article class="stat-card"><span>記録試合</span><strong id="statMatches">0</strong></article>
+          <article class="stat-card"><span>対象試合</span><strong id="statMatches">0</strong></article>
           <article class="stat-card"><span>記録ラウンド</span><strong id="statRounds">0</strong></article>
           <article class="stat-card"><span>ラッシュ</span><strong id="statRush">0%</strong></article>
           <article class="stat-card"><span>ラーク</span><strong id="statLurk">0%</strong></article>
         </div>
-        <article class="card stats-context"><div class="card-head"><h3 id="statsContextTitle">全ランクの統計</h3><span class="muted" id="statsContextMeta">保存した試合から自動集計</span></div></article>
-        <article class="card"><div class="card-head"><h3>サイト傾向</h3><span class="muted">選択中のランクだけを集計</span></div><div id="siteBars" class="bars"></div></article>
+        <article class="card stats-context"><div class="card-head"><h3 id="statsContextTitle">全試合の統計</h3><span class="muted" id="statsContextMeta">保存した試合から自動集計</span></div></article>
+        <article class="card"><div class="card-head"><h3>サイト傾向</h3><span class="muted">選択中の試合だけを集計</span></div><div id="siteBars" class="bars"></div></article>
       </section>
 
       <section id="settings" class="tab-panel">
