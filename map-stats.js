@@ -44,7 +44,7 @@ renderStats=function(){
     document.getElementById('statsContextMeta').textContent=`${matches.length}試合 / 勝率 ${winRate}%`;
   }
 
-  const counts={A:0,B:0,Mid:0,その他:0};
+  const counts={A:0,B:0,C:0,Mid:0,その他:0};
   rounds.forEach(round=>{counts[round.site]=(counts[round.site]||0)+1;});
   const total=rounds.length||1;
 
@@ -56,3 +56,9 @@ renderStats=function(){
 
 mapStatsFilter.addEventListener('change',renderStats);
 renderStats();
+
+if(!document.querySelector('script[src="round-v2.js"]')){
+  const roundScript=document.createElement('script');
+  roundScript.src='round-v2.js';
+  document.body.appendChild(roundScript);
+}
