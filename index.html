@@ -19,35 +19,19 @@
       </div>
 
       <nav class="nav" aria-label="メインメニュー">
-        <button class="nav-item active" data-tab="memo">
-          <span class="nav-icon">✎</span><span>作戦メモ</span>
-        </button>
-        <button class="nav-item" data-tab="match">
-          <span class="nav-icon">◈</span><span>試合</span>
-        </button>
-        <button class="nav-item" data-tab="history">
-          <span class="nav-icon">↶</span><span>履歴</span>
-        </button>
-        <button class="nav-item" data-tab="stats">
-          <span class="nav-icon">▥</span><span>統計</span>
-        </button>
-        <button class="nav-item" data-tab="settings">
-          <span class="nav-icon">⚙</span><span>設定</span>
-        </button>
+        <button class="nav-item active" data-tab="memo"><span class="nav-icon">✎</span><span>作戦メモ</span></button>
+        <button class="nav-item" data-tab="match"><span class="nav-icon">◈</span><span>試合</span></button>
+        <button class="nav-item" data-tab="history"><span class="nav-icon">↶</span><span>履歴</span></button>
+        <button class="nav-item" data-tab="stats"><span class="nav-icon">▥</span><span>統計</span></button>
+        <button class="nav-item" data-tab="settings"><span class="nav-icon">⚙</span><span>設定</span></button>
       </nav>
 
-      <div class="sidebar-footer">
-        <div class="status-dot"></div>
-        <span>LOCAL SAVE</span>
-      </div>
+      <div class="sidebar-footer"><div class="status-dot"></div><span>LOCAL SAVE</span></div>
     </aside>
 
     <main class="main">
       <header class="topbar">
-        <div>
-          <p class="eyebrow">VALORANT MATCH TOOL</p>
-          <h1 id="pageTitle">作戦メモ</h1>
-        </div>
+        <div><p class="eyebrow">VALORANT MATCH TOOL</p><h1 id="pageTitle">作戦メモ</h1></div>
         <button id="mobileMenu" class="mobile-menu" aria-label="メニュー">☰</button>
       </header>
 
@@ -56,26 +40,41 @@
           <div>
             <span class="tag">TACTICAL NOTES</span>
             <h2>相手の動きを、その場で残す。</h2>
-            <p>試合中に気づいたラッシュ、ラーク、セットプレイ、プレイヤーごとの癖を素早く記録できます。</p>
+            <p>エージェントをドラッグしてメモに関連付け、気づいたラッシュ、ラーク、セットプレイ、プレイヤーごとの癖を素早く記録できます。</p>
           </div>
           <button class="primary-btn" id="saveMemo">メモを保存</button>
         </div>
 
+        <article class="card agent-library-card">
+          <div class="card-head agent-library-head">
+            <div><h3>エージェント一覧</h3><span class="muted">ドラッグ＆ドロップ / スマホはタップ→追加先をタップ</span></div>
+            <input class="agent-search" id="memoAgentSearch" placeholder="エージェント検索" />
+          </div>
+          <div id="memoAgentLibrary" class="agent-library-grid loading-agents">エージェントを読み込み中...</div>
+        </article>
+
         <div class="grid two">
-          <article class="card">
+          <article class="card memo-card">
             <div class="card-head"><h3>全体傾向</h3><span class="mini-tag">TEAM</span></div>
+            <div id="teamMemoAgents" class="agent-dropzone" data-drop-target="teamMemoAgents"><span class="drop-hint">ここにエージェントをドロップ</span></div>
             <textarea id="teamMemo" placeholder="例：Aラッシュ多め / エコはB寄り / Midを毎ラウンド触る"></textarea>
           </article>
-          <article class="card">
+          <article class="card memo-card">
             <div class="card-head"><h3>プレイヤーメモ</h3><span class="mini-tag">PLAYER</span></div>
+            <div id="playerMemoAgents" class="agent-dropzone" data-drop-target="playerMemoAgents"><span class="drop-hint">ここにエージェントをドロップ</span></div>
             <textarea id="playerMemo" placeholder="例：JettはOP多め / KJはBラーク / OmenはA Mainパラノイア"></textarea>
           </article>
         </div>
 
         <article class="card quick-card">
-          <div class="card-head"><h3>クイックタグ</h3><span class="muted">クリックでメモに追加</span></div>
-          <div class="quick-tags" id="quickTags">
-            <button>Aラッシュ</button><button>Bラッシュ</button><button>Mid</button><button>デフォルト</button><button>ラーク</button><button>フェイク</button><button>OP</button><button>エコ</button>
+          <div class="card-head">
+            <div><h3>クイックタグ</h3><span class="muted">最後に選んだメモへ追加</span></div>
+            <button class="ghost-btn" id="toggleTagEditor">タグを編集</button>
+          </div>
+          <div class="quick-tags" id="quickTags"></div>
+          <div id="tagEditor" class="tag-editor hidden">
+            <div id="tagEditorList" class="tag-editor-list"></div>
+            <div class="tag-add-row"><input id="newTagInput" placeholder="新しいタグ名" /><button class="primary-btn" id="addQuickTag">＋ 追加</button></div>
           </div>
         </article>
       </section>
@@ -85,6 +84,19 @@
           <div><span class="tag">LIVE MATCH</span><h2>試合記録</h2></div>
           <div class="score-box"><input id="ourScore" type="number" min="0" value="0" /><span>:</span><input id="enemyScore" type="number" min="0" value="0" /></div>
         </div>
+
+        <article class="card agent-library-card">
+          <div class="card-head agent-library-head">
+            <div><h3>エージェント一覧</h3><span class="muted">敵チームへドラッグして構成を記録</span></div>
+            <input class="agent-search" id="matchAgentSearch" placeholder="エージェント検索" />
+          </div>
+          <div id="matchAgentLibrary" class="agent-library-grid loading-agents">エージェントを読み込み中...</div>
+        </article>
+
+        <article class="card enemy-team-card">
+          <div class="card-head"><h3>敵チーム</h3><span class="muted">最大5人</span></div>
+          <div id="matchAgents" class="agent-dropzone team-dropzone" data-drop-target="matchAgents"><span class="drop-hint">ここに敵エージェントをドロップ</span></div>
+        </article>
 
         <div class="grid three">
           <article class="card compact"><label>マップ</label><select id="mapSelect"><option>Ascent</option><option>Bind</option><option>Haven</option><option>Lotus</option><option>Split</option><option>Sunset</option><option>Icebox</option><option>Breeze</option><option>Corrode</option></select></article>
@@ -97,7 +109,7 @@
           <div class="round-builder">
             <select id="siteSelect"><option>A</option><option>B</option><option>Mid</option><option>その他</option></select>
             <select id="planSelect"><option>ラッシュ</option><option>デフォルト</option><option>ラーク</option><option>フェイク</option><option>スプリット</option><option>リテイク</option><option>その他</option></select>
-            <input id="roundNote" placeholder="補足メモ（任意）" />
+            <div id="roundAgentDrop" class="round-note-drop" data-drop-target="roundNote"><input id="roundNote" placeholder="補足メモ（エージェントもドロップ可）" /></div>
             <button class="primary-btn" id="addRound">＋ 追加</button>
           </div>
           <div id="roundList" class="round-list empty-state">まだラウンド記録がありません。</div>
@@ -127,6 +139,7 @@
           <article class="card"><h3>表示</h3><label class="setting-row"><span>コンパクト表示</span><input type="checkbox" id="compactToggle" /></label></article>
           <article class="card danger-zone"><h3>データ管理</h3><p>この端末に保存されているメモ・試合履歴を削除します。</p><button class="danger-btn" id="resetData">ローカルデータを全削除</button></article>
         </div>
+        <p class="riot-note">TACLOGはRiot Gamesの公式サービスではありません。VALORANTおよびエージェントアートの権利はRiot Gamesに帰属します。</p>
       </section>
     </main>
   </div>
