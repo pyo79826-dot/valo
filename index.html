@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0b0c10" />
+  <title>TACLOG</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-mark">T</div>
+        <div>
+          <div class="brand-name">TACLOG</div>
+          <div class="brand-sub">TACTICAL MATCH NOTES</div>
+        </div>
+      </div>
+
+      <nav class="nav" aria-label="メインメニュー">
+        <button class="nav-item active" data-tab="memo">
+          <span class="nav-icon">✎</span><span>作戦メモ</span>
+        </button>
+        <button class="nav-item" data-tab="match">
+          <span class="nav-icon">◈</span><span>試合</span>
+        </button>
+        <button class="nav-item" data-tab="history">
+          <span class="nav-icon">↶</span><span>履歴</span>
+        </button>
+        <button class="nav-item" data-tab="stats">
+          <span class="nav-icon">▥</span><span>統計</span>
+        </button>
+        <button class="nav-item" data-tab="settings">
+          <span class="nav-icon">⚙</span><span>設定</span>
+        </button>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="status-dot"></div>
+        <span>LOCAL SAVE</span>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">VALORANT MATCH TOOL</p>
+          <h1 id="pageTitle">作戦メモ</h1>
+        </div>
+        <button id="mobileMenu" class="mobile-menu" aria-label="メニュー">☰</button>
+      </header>
+
+      <section id="memo" class="tab-panel active">
+        <div class="hero-card">
+          <div>
+            <span class="tag">TACTICAL NOTES</span>
+            <h2>相手の動きを、その場で残す。</h2>
+            <p>試合中に気づいたラッシュ、ラーク、セットプレイ、プレイヤーごとの癖を素早く記録できます。</p>
+          </div>
+          <button class="primary-btn" id="saveMemo">メモを保存</button>
+        </div>
+
+        <div class="grid two">
+          <article class="card">
+            <div class="card-head"><h3>全体傾向</h3><span class="mini-tag">TEAM</span></div>
+            <textarea id="teamMemo" placeholder="例：Aラッシュ多め / エコはB寄り / Midを毎ラウンド触る"></textarea>
+          </article>
+          <article class="card">
+            <div class="card-head"><h3>プレイヤーメモ</h3><span class="mini-tag">PLAYER</span></div>
+            <textarea id="playerMemo" placeholder="例：JettはOP多め / KJはBラーク / OmenはA Mainパラノイア"></textarea>
+          </article>
+        </div>
+
+        <article class="card quick-card">
+          <div class="card-head"><h3>クイックタグ</h3><span class="muted">クリックでメモに追加</span></div>
+          <div class="quick-tags" id="quickTags">
+            <button>Aラッシュ</button><button>Bラッシュ</button><button>Mid</button><button>デフォルト</button><button>ラーク</button><button>フェイク</button><button>OP</button><button>エコ</button>
+          </div>
+        </article>
+      </section>
+
+      <section id="match" class="tab-panel">
+        <div class="section-title-row">
+          <div><span class="tag">LIVE MATCH</span><h2>試合記録</h2></div>
+          <div class="score-box"><input id="ourScore" type="number" min="0" value="0" /><span>:</span><input id="enemyScore" type="number" min="0" value="0" /></div>
+        </div>
+
+        <div class="grid three">
+          <article class="card compact"><label>マップ</label><select id="mapSelect"><option>Ascent</option><option>Bind</option><option>Haven</option><option>Lotus</option><option>Split</option><option>Sunset</option><option>Icebox</option><option>Breeze</option><option>Corrode</option></select></article>
+          <article class="card compact"><label>開始サイド</label><select id="sideSelect"><option>攻め</option><option>守り</option></select></article>
+          <article class="card compact"><label>結果</label><select id="resultSelect"><option value="">未確定</option><option value="WIN">WIN</option><option value="LOSS">LOSS</option><option value="DRAW">DRAW</option></select></article>
+        </div>
+
+        <article class="card">
+          <div class="card-head"><h3>ラウンドログ</h3><button class="ghost-btn" id="clearRounds">クリア</button></div>
+          <div class="round-builder">
+            <select id="siteSelect"><option>A</option><option>B</option><option>Mid</option><option>その他</option></select>
+            <select id="planSelect"><option>ラッシュ</option><option>デフォルト</option><option>ラーク</option><option>フェイク</option><option>スプリット</option><option>リテイク</option><option>その他</option></select>
+            <input id="roundNote" placeholder="補足メモ（任意）" />
+            <button class="primary-btn" id="addRound">＋ 追加</button>
+          </div>
+          <div id="roundList" class="round-list empty-state">まだラウンド記録がありません。</div>
+        </article>
+        <button class="finish-btn" id="finishMatch">試合を履歴に保存</button>
+      </section>
+
+      <section id="history" class="tab-panel">
+        <div class="section-title-row"><div><span class="tag">ARCHIVE</span><h2>試合履歴</h2></div><button class="ghost-btn" id="clearHistory">履歴を削除</button></div>
+        <div id="historyList" class="history-list empty-state">保存された試合はまだありません。</div>
+      </section>
+
+      <section id="stats" class="tab-panel">
+        <div class="section-title-row"><div><span class="tag">ANALYTICS</span><h2>統計</h2></div></div>
+        <div class="stat-grid">
+          <article class="stat-card"><span>記録試合</span><strong id="statMatches">0</strong></article>
+          <article class="stat-card"><span>記録ラウンド</span><strong id="statRounds">0</strong></article>
+          <article class="stat-card"><span>ラッシュ</span><strong id="statRush">0%</strong></article>
+          <article class="stat-card"><span>ラーク</span><strong id="statLurk">0%</strong></article>
+        </div>
+        <article class="card"><div class="card-head"><h3>サイト傾向</h3><span class="muted">保存したラウンドから自動集計</span></div><div id="siteBars" class="bars"></div></article>
+      </section>
+
+      <section id="settings" class="tab-panel">
+        <div class="section-title-row"><div><span class="tag">PREFERENCES</span><h2>設定</h2></div></div>
+        <div class="grid two">
+          <article class="card"><h3>表示</h3><label class="setting-row"><span>コンパクト表示</span><input type="checkbox" id="compactToggle" /></label></article>
+          <article class="card danger-zone"><h3>データ管理</h3><p>この端末に保存されているメモ・試合履歴を削除します。</p><button class="danger-btn" id="resetData">ローカルデータを全削除</button></article>
+        </div>
+      </section>
+    </main>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>
