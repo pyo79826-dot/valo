@@ -1,4 +1,4 @@
-const mapStatsMaps=['Ascent','Bind','Haven','Lotus','Split','Sunset','Icebox','Breeze','Corrode','Summit'];
+const mapStatsMaps=['Ascent','Bind','Haven','Lotus','Split','Sunset','Icebox','Breeze','Abyss','Corrode','Summit'];
 const oldStatsFilter=document.getElementById('matchFilter');
 const mapStatsFilter=oldStatsFilter.cloneNode(true);
 oldStatsFilter.replaceWith(mapStatsFilter);
