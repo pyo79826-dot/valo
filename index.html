@@ -132,7 +132,7 @@
       <section id="stats" class="tab-panel">
         <div class="section-title-row stats-title-row">
           <div><span class="tag">ANALYTICS</span><h2>統計</h2></div>
-          <div class="match-filter-wrap"><label for="matchFilter">試合を選択</label><select id="matchFilter"><option value="all">全試合</option></select></div>
+          <div class="match-filter-wrap"><label for="matchFilter">マップで絞り込み</label><select id="matchFilter"><option value="all">全マップ</option></select></div>
         </div>
         <div class="stat-grid">
           <article class="stat-card"><span>対象試合</span><strong id="statMatches">0</strong></article>
@@ -140,8 +140,8 @@
           <article class="stat-card"><span>ラッシュ</span><strong id="statRush">0%</strong></article>
           <article class="stat-card"><span>ラーク</span><strong id="statLurk">0%</strong></article>
         </div>
-        <article class="card stats-context"><div class="card-head"><h3 id="statsContextTitle">全試合の統計</h3><span class="muted" id="statsContextMeta">保存した試合から自動集計</span></div></article>
-        <article class="card"><div class="card-head"><h3>サイト傾向</h3><span class="muted">選択中の試合だけを集計</span></div><div id="siteBars" class="bars"></div></article>
+        <article class="card stats-context"><div class="card-head"><h3 id="statsContextTitle">全マップの統計</h3><span class="muted" id="statsContextMeta">保存した試合から自動集計</span></div></article>
+        <article class="card"><div class="card-head"><h3>サイト傾向</h3><span class="muted">選択中のマップだけを集計</span></div><div id="siteBars" class="bars"></div></article>
       </section>
 
       <section id="settings" class="tab-panel">
@@ -155,5 +155,6 @@
     </main>
   </div>
   <script src="app.js"></script>
+  <script src="map-stats.js"></script>
 </body>
 </html>
