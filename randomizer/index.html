@@ -1,89 +1,240 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>VALO Minimal Randomizer</title>
-<style>
-:root{--red:#ff4655;--dark:#0d141c;--panel:#121c26;--cream:#f3f0e9;--muted:#8f9aa3}
-*{box-sizing:border-box}
-body{margin:0;background:#0a0f15;font-family:Inter,Arial,Helvetica,sans-serif;color:var(--cream);min-height:100vh;display:grid;place-items:center;padding:24px}
-.app{position:relative;overflow:hidden;width:min(760px,100%);background:linear-gradient(145deg,#0c131a 0%,#101a23 58%,#121821 100%);border:1px solid rgba(255,255,255,.1);padding:clamp(20px,5vw,44px);min-height:430px}
-.orb{position:absolute;border-radius:999px;filter:blur(55px);pointer-events:none}
-.orb.one{width:190px;height:190px;background:rgba(255,70,85,.18);right:-40px;top:-60px}
-.orb.two{width:160px;height:160px;background:rgba(255,255,255,.05);left:-40px;bottom:-65px}
-.shell{position:relative;z-index:1;max-width:650px;margin:auto}
-.top{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:38px}
-.identity{display:flex;align-items:center;gap:11px}
-.logo{width:28px;height:28px;border:1px solid rgba(255,255,255,.28);display:grid;place-items:center;transform:rotate(45deg)}
-.logo:after{content:"";width:9px;height:9px;background:var(--red)}
-.name{font-weight:800;letter-spacing:.18em;font-size:12px;text-transform:uppercase}
-.tag{font-size:9px;letter-spacing:.22em;color:var(--muted);text-transform:uppercase}
-.glass{position:relative;background:linear-gradient(135deg,rgba(255,255,255,.07),rgba(255,255,255,.025));border:1px solid rgba(255,255,255,.13);padding:30px clamp(20px,5vw,36px);clip-path:polygon(18px 0,100% 0,100% calc(100% - 18px),calc(100% - 18px) 100%,0 100%,0 18px)}
-.glass:before{content:"";position:absolute;left:0;top:0;width:84px;height:2px;background:var(--red)}
-.label{font-size:10px;letter-spacing:.3em;color:#94a0aa;text-transform:uppercase;font-weight:700}
-.value{font-size:clamp(62px,17vw,118px);line-height:.95;font-weight:850;letter-spacing:-.055em;font-variant-numeric:tabular-nums;margin:18px 0 24px;color:#f7f4ef}
-.value.flash{animation:chicPop .28s cubic-bezier(.2,.8,.2,1)}
-@keyframes chicPop{0%{opacity:.2;transform:translateY(8px) scale(.985);filter:blur(2px)}100%{opacity:1;transform:none;filter:none}}
-.meta{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;padding-top:16px;border-top:1px solid rgba(255,255,255,.09);font-size:10px;letter-spacing:.18em;color:#788590;text-transform:uppercase}
-.accent{color:var(--red)}
-.actions{display:grid;grid-template-columns:minmax(0,1fr) 110px;gap:10px;margin-top:16px}
-button{border:0;min-height:56px;font-weight:800;letter-spacing:.17em;text-transform:uppercase;font-size:11px;cursor:pointer}
-.generate{position:relative;overflow:hidden;background:var(--red);color:white;clip-path:polygon(13px 0,100% 0,100% calc(100% - 13px),calc(100% - 13px) 100%,0 100%,0 13px)}
-.generate:before{content:"";position:absolute;inset:0;background:#f3f0e9;transform:translateX(-101%);transition:transform .22s ease}
-.generate span{position:relative;z-index:1}
-.reset{background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.13);color:#a6b0b8}
-.history{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap}
-.chip{min-width:72px;padding:9px 11px;border:1px solid rgba(255,255,255,.09);background:rgba(255,255,255,.025);font-size:11px;color:#9ba6ae;font-variant-numeric:tabular-nums;text-align:center}
-button:active{transform:translateY(1px)}
-button:focus-visible{outline:2px solid white;outline-offset:3px}
-@media(hover:hover) and (pointer:fine){.generate:hover:before{transform:translateX(0)}.generate:hover{color:#101821}}
-@media(max-width:520px){.top{align-items:flex-start}.actions{grid-template-columns:1fr}.reset{min-height:46px}}
-@media(prefers-reduced-motion:reduce){.value.flash{animation:none}.generate:before{transition:none}}
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VALO Sens RNG</title>
+  <style>
+    :root {
+      --bg: #08090c;
+      --panel: #101218;
+      --panel-2: #151820;
+      --line: rgba(255,255,255,.09);
+      --text: #f5f7fb;
+      --muted: #9298a7;
+      --red: #ff4655;
+      --red-2: #b72a36;
+      --good: #8fe3c1;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      min-height:100vh;
+      color:var(--text);
+      background:
+        radial-gradient(circle at 80% 10%, rgba(255,70,85,.12), transparent 27%),
+        linear-gradient(135deg,#07080b 0%,#0b0d12 56%,#10080a 100%);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      overflow-x:hidden;
+    }
+    body:before{
+      content:"";
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      opacity:.08;
+      background-image:linear-gradient(rgba(255,255,255,.3) 1px, transparent 1px),linear-gradient(90deg,rgba(255,255,255,.3) 1px,transparent 1px);
+      background-size:42px 42px;
+      mask-image:linear-gradient(to bottom, black, transparent 75%);
+    }
+    .wrap{width:min(1100px,calc(100% - 32px));margin:auto;padding:42px 0 64px;position:relative}
+    .topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:28px}
+    .brand{display:flex;align-items:center;gap:12px;font-weight:900;letter-spacing:.12em}
+    .logo{width:38px;height:38px;border:2px solid var(--red);transform:skew(-8deg);position:relative}
+    .logo:after{content:"";position:absolute;left:8px;top:8px;width:18px;height:18px;background:var(--red);clip-path:polygon(0 0,100% 0,100% 38%,38% 100%,0 100%)}
+    .tiny{font-size:12px;color:var(--muted);letter-spacing:.08em}
+    .hero{padding:38px;border:1px solid var(--line);background:linear-gradient(180deg,rgba(255,255,255,.035),rgba(255,255,255,.015));box-shadow:0 26px 70px rgba(0,0,0,.35);position:relative;overflow:hidden}
+    .hero:after{content:"";position:absolute;width:260px;height:260px;background:var(--red);right:-165px;top:-165px;transform:rotate(45deg);opacity:.65}
+    h1{margin:0 0 8px;font-size:clamp(34px,6vw,72px);line-height:.92;letter-spacing:-.055em;font-weight:950;max-width:800px}
+    h1 span{color:var(--red)}
+    .lead{color:var(--muted);max-width:650px;line-height:1.7;margin:18px 0 0}
+    .grid{display:grid;grid-template-columns:1.3fr .7fr;gap:18px;margin-top:18px}
+    .card{border:1px solid var(--line);background:rgba(16,18,24,.88);backdrop-filter:blur(10px);padding:24px}
+    .result-card{min-height:390px;display:flex;flex-direction:column;justify-content:space-between}
+    .eyebrow{font-size:12px;color:var(--muted);letter-spacing:.16em;font-weight:800;text-transform:uppercase}
+    .sens-wrap{margin:32px 0 24px}
+    .sens{font-variant-numeric:tabular-nums;font-size:clamp(72px,13vw,132px);font-weight:950;line-height:.85;letter-spacing:-.07em;text-shadow:0 0 35px rgba(255,70,85,.18)}
+    .sens small{font-size:18px;color:var(--muted);letter-spacing:0;margin-left:12px}
+    .edpi{font-size:16px;color:var(--muted);margin-top:16px}.edpi b{color:var(--text);font-size:22px}
+    .actions{display:flex;gap:10px;flex-wrap:wrap}
+    button{border:0;cursor:pointer;font:inherit;font-weight:850;letter-spacing:.02em;padding:15px 20px;transition:.18s ease;clip-path:polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,10px 100%,0 calc(100% - 10px))}
+    .primary{background:var(--red);color:white;min-width:190px;box-shadow:0 12px 32px rgba(255,70,85,.2)}
+    .primary:hover{background:#ff5d69;transform:translateY(-2px)}
+    .secondary{background:#222631;color:#fff}.secondary:hover{background:#2b303d}
+    .controls{display:grid;gap:18px}
+    .group label{display:flex;justify-content:space-between;color:#cbd0db;font-size:13px;margin-bottom:8px}.group label span{color:var(--muted)}
+    input{width:100%;background:#090b10;border:1px solid #2a2e38;color:#fff;padding:14px 14px;font:inherit;outline:none}
+    input:focus{border-color:var(--red);box-shadow:0 0 0 3px rgba(255,70,85,.08)}
+    .range-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .preset-row{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+    .preset{padding:11px 8px;background:#1b1e26;color:#c8cbd4;font-size:12px;clip-path:none;border:1px solid transparent}
+    .preset.active{border-color:var(--red);color:white;background:rgba(255,70,85,.10)}
+    .history{margin-top:18px}.history-list{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:12px}
+    .hist{background:#0b0d12;border:1px solid var(--line);padding:11px;text-align:center;font-variant-numeric:tabular-nums;color:#d8dbe2;cursor:pointer}.hist:hover{border-color:rgba(255,70,85,.55)}
+    .note{font-size:12px;line-height:1.6;color:var(--muted);margin-top:18px}
+    .flash{animation:flash .25s ease}@keyframes flash{0%{transform:scale(.985);opacity:.45}100%{transform:scale(1);opacity:1}}
+    .toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(20px);background:#f3f5f8;color:#08090c;padding:11px 16px;font-size:13px;font-weight:800;opacity:0;pointer-events:none;transition:.2s}.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+    @media(max-width:780px){.wrap{width:min(100% - 20px,1100px);padding-top:22px}.hero{padding:26px 20px}.grid{grid-template-columns:1fr}.history-list{grid-template-columns:repeat(3,1fr)}.sens{font-size:82px}.topbar .tiny{display:none}}
+  </style>
 </head>
 <body>
-<section class="app" aria-label="0から10までの乱数生成アプリ">
-<div class="orb one"></div><div class="orb two"></div>
-<div class="shell">
-<div class="top">
-<div class="identity"><div class="logo" aria-hidden="true"></div><div><div class="name">RANDOM//VAL</div><div class="tag">Sensitivity Generator</div></div></div>
-<div class="tag">0.000 — 10.000</div>
-</div>
-<div class="glass">
-<div class="label">Generated value</div>
-<div id="value" class="value" aria-live="polite">0.000</div>
-<div class="meta"><span>Precision <span class="accent">0.001</span></span><span>Randomized locally</span></div>
-</div>
-<div class="actions">
-<button id="generate" class="generate" type="button"><span>Generate Value</span></button>
-<button id="reset" class="reset" type="button">Reset</button>
-</div>
-<div id="history" class="history" aria-label="最近の生成履歴"><span class="chip">—</span><span class="chip">—</span><span class="chip">—</span></div>
-</div>
-</section>
-<script>
-const value=document.getElementById('value');
-const historyBox=document.getElementById('history');
-const gen=document.getElementById('generate');
-const reset=document.getElementById('reset');
-let history=[];
-function renderHistory(){
-  historyBox.innerHTML=[0,1,2].map(i=>'<span class="chip">'+(history[i]||'—')+'</span>').join('');
-}
-function generate(){
-  const n=Math.floor(Math.random()*10001)/1000;
-  const text=n.toFixed(3);
-  value.textContent=text;
-  history.unshift(text);
-  history=history.slice(0,3);
-  renderHistory();
-  value.classList.remove('flash');
-  void value.offsetWidth;
-  value.classList.add('flash');
-}
-gen.addEventListener('click',generate);
-reset.addEventListener('click',()=>{value.textContent='0.000';history=[];renderHistory();});
-</script>
+  <main class="wrap">
+    <div class="topbar">
+      <div class="brand"><div class="logo"></div><div>VALO SENS RNG</div></div>
+      <div class="tiny">RANDOMIZE YOUR AIM</div>
+    </div>
+
+    <section class="hero">
+      <div class="eyebrow">Sensitivity Randomizer</div>
+      <h1>次の感度は、<span>運</span>で決める。</h1>
+      <p class="lead">指定した範囲からVALORANTのゲーム内感度をランダム生成。DPIを入れればeDPIも自動で計算します。</p>
+    </section>
+
+    <div class="grid">
+      <section class="card result-card">
+        <div>
+          <div class="eyebrow">Generated Sensitivity</div>
+          <div class="sens-wrap" id="resultBox">
+            <div class="sens"><span id="sensValue">0.300</span><small>SENS</small></div>
+            <div class="edpi">eDPI <b id="edpiValue">240.0</b> <span id="dpiLabel">@ 800 DPI</span></div>
+          </div>
+        </div>
+        <div>
+          <div class="actions">
+            <button class="primary" id="randomBtn">RANDOMIZE</button>
+            <button class="secondary" id="copyBtn">COPY</button>
+          </div>
+          <div class="history">
+            <div class="eyebrow">Recent rolls</div>
+            <div class="history-list" id="historyList"></div>
+          </div>
+        </div>
+      </section>
+
+      <aside class="card controls">
+        <div class="eyebrow">Settings</div>
+        <div class="group">
+          <label>DPI <span>mouse</span></label>
+          <input id="dpi" type="number" value="800" min="1" step="50" />
+        </div>
+        <div class="group">
+          <label>感度範囲 <span>min / max</span></label>
+          <div class="range-row">
+            <input id="minSens" type="number" value="0.100" min="0.001" max="10" step="0.001" />
+            <input id="maxSens" type="number" value="0.600" min="0.001" max="10" step="0.001" />
+          </div>
+        </div>
+        <div class="group">
+          <label>プリセット <span>range</span></label>
+          <div class="preset-row">
+            <button class="preset" data-min="0.100" data-max="0.250">LOW</button>
+            <button class="preset active" data-min="0.200" data-max="0.500">MID</button>
+            <button class="preset" data-min="0.400" data-max="0.800">HIGH</button>
+          </div>
+        </div>
+        <div class="group">
+          <label>小数点 <span>digits</span></label>
+          <input id="digits" type="number" value="3" min="2" max="4" step="1" />
+        </div>
+        <div class="note">※ 完全な乱数で生成します。気に入った感度が出たら、数試合使ってから微調整するのがおすすめです。</div>
+      </aside>
+    </div>
+  </main>
+  <div class="toast" id="toast">コピーしました</div>
+
+  <script>
+    const $ = id => document.getElementById(id);
+    const sensValue = $('sensValue');
+    const edpiValue = $('edpiValue');
+    const dpiLabel = $('dpiLabel');
+    const resultBox = $('resultBox');
+    const historyList = $('historyList');
+    const history = [];
+
+    function getSettings(){
+      let min = parseFloat($('minSens').value);
+      let max = parseFloat($('maxSens').value);
+      const dpi = Math.max(1, parseFloat($('dpi').value) || 800);
+      const digits = Math.min(4, Math.max(2, parseInt($('digits').value) || 3));
+      if (!Number.isFinite(min)) min = 0.1;
+      if (!Number.isFinite(max)) max = 0.6;
+      if (min > max) [min, max] = [max, min];
+      return {min, max, dpi, digits};
+    }
+
+    function secureRandom(){
+      if (window.crypto?.getRandomValues) {
+        const a = new Uint32Array(1);
+        crypto.getRandomValues(a);
+        return a[0] / 4294967296;
+      }
+      return Math.random();
+    }
+
+    function setSensitivity(value, pushHistory = true){
+      const {dpi, digits} = getSettings();
+      const fixed = Number(value).toFixed(digits);
+      sensValue.textContent = fixed;
+      edpiValue.textContent = (Number(fixed) * dpi).toFixed(1);
+      dpiLabel.textContent = '@ ' + Math.round(dpi) + ' DPI';
+      resultBox.classList.remove('flash');
+      void resultBox.offsetWidth;
+      resultBox.classList.add('flash');
+      if(pushHistory){
+        history.unshift(fixed);
+        if(history.length > 10) history.pop();
+        renderHistory();
+      }
+    }
+
+    function randomize(){
+      const {min, max, digits} = getSettings();
+      const steps = Math.round((max - min) * Math.pow(10,digits));
+      const n = Math.floor(secureRandom() * (steps + 1));
+      const value = min + n / Math.pow(10,digits);
+      setSensitivity(value);
+    }
+
+    function renderHistory(){
+      historyList.innerHTML = '';
+      history.slice(0,10).forEach(v => {
+        const el = document.createElement('div');
+        el.className = 'hist';
+        el.textContent = v;
+        el.title = 'クリックでこの感度を再表示';
+        el.onclick = () => setSensitivity(Number(v), false);
+        historyList.appendChild(el);
+      });
+    }
+
+    function updateEdpi(){
+      const {dpi} = getSettings();
+      const current = parseFloat(sensValue.textContent) || 0;
+      edpiValue.textContent = (current * dpi).toFixed(1);
+      dpiLabel.textContent = '@ ' + Math.round(dpi) + ' DPI';
+    }
+
+    $('randomBtn').addEventListener('click', randomize);
+    $('copyBtn').addEventListener('click', async () => {
+      const text = sensValue.textContent;
+      try{ await navigator.clipboard.writeText(text); }
+      catch{ const t=document.createElement('textarea');t.value=text;document.body.appendChild(t);t.select();document.execCommand('copy');t.remove(); }
+      const toast = $('toast'); toast.classList.add('show'); setTimeout(()=>toast.classList.remove('show'),1200);
+    });
+    $('dpi').addEventListener('input', updateEdpi);
+    document.querySelectorAll('.preset').forEach(btn => btn.addEventListener('click', () => {
+      document.querySelectorAll('.preset').forEach(x=>x.classList.remove('active'));
+      btn.classList.add('active');
+      $('minSens').value = Number(btn.dataset.min).toFixed(3);
+      $('maxSens').value = Number(btn.dataset.max).toFixed(3);
+      randomize();
+    }));
+    document.addEventListener('keydown', e => {
+      if(e.code === 'Space' && !['INPUT','TEXTAREA'].includes(document.activeElement.tagName)){
+        e.preventDefault(); randomize();
+      }
+    });
+    randomize();
+  </script>
 </body>
 </html>
