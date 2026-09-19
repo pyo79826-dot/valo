@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VALO Minimal Randomizer</title>
+<style>
+:root{--red:#ff4655;--dark:#0d141c;--panel:#121c26;--cream:#f3f0e9;--muted:#8f9aa3}
+*{box-sizing:border-box}
+body{margin:0;background:#0a0f15;font-family:Inter,Arial,Helvetica,sans-serif;color:var(--cream);min-height:100vh;display:grid;place-items:center;padding:24px}
+.app{position:relative;overflow:hidden;width:min(760px,100%);background:linear-gradient(145deg,#0c131a 0%,#101a23 58%,#121821 100%);border:1px solid rgba(255,255,255,.1);padding:clamp(20px,5vw,44px);min-height:430px}
+.orb{position:absolute;border-radius:999px;filter:blur(55px);pointer-events:none}
+.orb.one{width:190px;height:190px;background:rgba(255,70,85,.18);right:-40px;top:-60px}
+.orb.two{width:160px;height:160px;background:rgba(255,255,255,.05);left:-40px;bottom:-65px}
+.shell{position:relative;z-index:1;max-width:650px;margin:auto}
+.top{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:38px}
+.identity{display:flex;align-items:center;gap:11px}
+.logo{width:28px;height:28px;border:1px solid rgba(255,255,255,.28);display:grid;place-items:center;transform:rotate(45deg)}
+.logo:after{content:"";width:9px;height:9px;background:var(--red)}
+.name{font-weight:800;letter-spacing:.18em;font-size:12px;text-transform:uppercase}
+.tag{font-size:9px;letter-spacing:.22em;color:var(--muted);text-transform:uppercase}
+.glass{position:relative;background:linear-gradient(135deg,rgba(255,255,255,.07),rgba(255,255,255,.025));border:1px solid rgba(255,255,255,.13);padding:30px clamp(20px,5vw,36px);clip-path:polygon(18px 0,100% 0,100% calc(100% - 18px),calc(100% - 18px) 100%,0 100%,0 18px)}
+.glass:before{content:"";position:absolute;left:0;top:0;width:84px;height:2px;background:var(--red)}
+.label{font-size:10px;letter-spacing:.3em;color:#94a0aa;text-transform:uppercase;font-weight:700}
+.value{font-size:clamp(62px,17vw,118px);line-height:.95;font-weight:850;letter-spacing:-.055em;font-variant-numeric:tabular-nums;margin:18px 0 24px;color:#f7f4ef}
+.value.flash{animation:chicPop .28s cubic-bezier(.2,.8,.2,1)}
+@keyframes chicPop{0%{opacity:.2;transform:translateY(8px) scale(.985);filter:blur(2px)}100%{opacity:1;transform:none;filter:none}}
+.meta{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;padding-top:16px;border-top:1px solid rgba(255,255,255,.09);font-size:10px;letter-spacing:.18em;color:#788590;text-transform:uppercase}
+.accent{color:var(--red)}
+.actions{display:grid;grid-template-columns:minmax(0,1fr) 110px;gap:10px;margin-top:16px}
+button{border:0;min-height:56px;font-weight:800;letter-spacing:.17em;text-transform:uppercase;font-size:11px;cursor:pointer}
+.generate{position:relative;overflow:hidden;background:var(--red);color:white;clip-path:polygon(13px 0,100% 0,100% calc(100% - 13px),calc(100% - 13px) 100%,0 100%,0 13px)}
+.generate:before{content:"";position:absolute;inset:0;background:#f3f0e9;transform:translateX(-101%);transition:transform .22s ease}
+.generate span{position:relative;z-index:1}
+.reset{background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.13);color:#a6b0b8}
+.history{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap}
+.chip{min-width:72px;padding:9px 11px;border:1px solid rgba(255,255,255,.09);background:rgba(255,255,255,.025);font-size:11px;color:#9ba6ae;font-variant-numeric:tabular-nums;text-align:center}
+button:active{transform:translateY(1px)}
+button:focus-visible{outline:2px solid white;outline-offset:3px}
+@media(hover:hover) and (pointer:fine){.generate:hover:before{transform:translateX(0)}.generate:hover{color:#101821}}
+@media(max-width:520px){.top{align-items:flex-start}.actions{grid-template-columns:1fr}.reset{min-height:46px}}
+@media(prefers-reduced-motion:reduce){.value.flash{animation:none}.generate:before{transition:none}}
+</style>
+</head>
+<body>
+<section class="app" aria-label="0から10までの乱数生成アプリ">
+<div class="orb one"></div><div class="orb two"></div>
+<div class="shell">
+<div class="top">
+<div class="identity"><div class="logo" aria-hidden="true"></div><div><div class="name">RANDOM//VAL</div><div class="tag">Sensitivity Generator</div></div></div>
+<div class="tag">0.000 — 10.000</div>
+</div>
+<div class="glass">
+<div class="label">Generated value</div>
+<div id="value" class="value" aria-live="polite">0.000</div>
+<div class="meta"><span>Precision <span class="accent">0.001</span></span><span>Randomized locally</span></div>
+</div>
+<div class="actions">
+<button id="generate" class="generate" type="button"><span>Generate Value</span></button>
+<button id="reset" class="reset" type="button">Reset</button>
+</div>
+<div id="history" class="history" aria-label="最近の生成履歴"><span class="chip">—</span><span class="chip">—</span><span class="chip">—</span></div>
+</div>
+</section>
+<script>
+const value=document.getElementById('value');
+const historyBox=document.getElementById('history');
+const gen=document.getElementById('generate');
+const reset=document.getElementById('reset');
+let history=[];
+function renderHistory(){
+  historyBox.innerHTML=[0,1,2].map(i=>'<span class="chip">'+(history[i]||'—')+'</span>').join('');
+}
+function generate(){
+  const n=Math.floor(Math.random()*10001)/1000;
+  const text=n.toFixed(3);
+  value.textContent=text;
+  history.unshift(text);
+  history=history.slice(0,3);
+  renderHistory();
+  value.classList.remove('flash');
+  void value.offsetWidth;
+  value.classList.add('flash');
+}
+gen.addEventListener('click',generate);
+reset.addEventListener('click',()=>{value.textContent='0.000';history=[];renderHistory();});
+</script>
+</body>
+</html>
